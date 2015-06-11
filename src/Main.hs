@@ -154,6 +154,6 @@ main :: IO ()
 main = execParser opts >>= entry
   where opts = info (helper <*> parseOpts)
           ( fullDesc
-	 <> progDesc "Flash programming tool for FTDI-based programmers"
-	 <> header "haskflash -- programming tool for FTDI-based programmers"
-	 <> footer "Notes: An unmodified iCEstick can only be programmed via the serial flash." )
+         <> progDesc "Flash programming tool for FTDI-based programmers"
+         <> header "haskflash -- programming tool for FTDI-based programmers"
+         <> footer "Notes: An unmodified iCEstick can only be programmed via the serial flash." )
