@@ -26,17 +26,17 @@ cabal-version:       >=1.10
 
 executable haskflash
   main-is:             Main.hs
-  
-  -- Modules included in this executable, other than Main.
-  -- other-modules:       
+  other-modules:       Cmd,
+                       FlashCmd,
+                       Ftdi
   
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:    
   
   build-depends:       base >=4.7 && <4.8,
                        bindings-libftdi >=0.1 && <0.2,
-		       bytestring >=0.10 && <0.11,
-		       optparse-applicative >=0.11 && <0.12
+                       bytestring >=0.10 && <0.11,
+                       optparse-applicative >=0.11 && <0.12
   
   hs-source-dirs:      src
   default-language:    Haskell2010

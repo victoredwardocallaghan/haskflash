@@ -9,14 +9,14 @@
   This module contains ..
 -}
 
-module HaskFlash.Ftdi where
+module Ftdi where
 
 import LibFtdi
 
 import Control.Concurrent (threadDelay)
 import Control.Exception (throwIO)
 
-import HaskFlash.Cmd
+import Cmd
 
 initFTDI' :: IO DeviceHandle
 initFTDI' = do

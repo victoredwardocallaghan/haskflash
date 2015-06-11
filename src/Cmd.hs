@@ -9,7 +9,7 @@
   This module contains ..
 -}
 
-module HaskFlash.Cmd where
+module Cmd where
 
 import LibFtdi
 

@@ -21,9 +21,9 @@ import Foreign (allocaBytes)
 import Options.Applicative
 import System.IO
 
-import HaskFlash.Cmd
-import HaskFlash.Ftdi
-import HaskFlash.FlashCmd
+import Cmd
+import Ftdi
+import FlashCmd
 
 
 -- | ..

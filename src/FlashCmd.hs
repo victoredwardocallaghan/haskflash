@@ -9,7 +9,7 @@
   This module contains ..
 -}
 
-module HaskFlash.FlashCmd where
+module FlashCmd where
 
 import LibFtdi
 
@@ -17,7 +17,7 @@ import Control.Concurrent (threadDelay)
 import Control.Monad (when)
 import Data.Bits
 
-import HaskFlash.Cmd
+import Cmd
 
 
 -- | ..
