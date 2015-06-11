@@ -1,0 +1,9 @@
+Changes in 0.1.0.2
+
+* Minor cabal file fixes.
+* Documentation fixes.
+
+Changes in 0.1.0.1
+
+* Add a change log.
+* hlibBladeRF.cabal: Move Bindings.X.Y into other-modules.
