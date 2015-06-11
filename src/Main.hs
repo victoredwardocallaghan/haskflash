@@ -16,7 +16,8 @@ import LibFtdi
 import Control.Concurrent (threadDelay)
 import Control.Monad.Fix (fix)
 import Control.Monad (when)
-import Data.Bits
+import           Data.Bits
+import qualified Data.ByteString as BS
 import Foreign (allocaBytes)
 import Options.Applicative
 import System.IO
@@ -91,15 +92,14 @@ entry (ProgramOptions h False False False False False True ver fp) = do
 
   --
   -- Program
-  withBinaryFile fp ReadMode $ \hdl -> allocaBytes 4096 $ \buf -> do
-                                          putStrLn "programming.."
+  withBinaryFile fp ReadMode $ \hdl -> do putStrLn "programming.."
                                           fix $ \loop -> do
-                                                 rc <- hGetBuf hdl buf 4096
-                                                 when (rc > 0) $ do
-                                                   -- sendSPI dev buf
-					           when ver $ putStrLn ("sending " ++ show rc ++ " bytes.")
+                                                 buf <- BS.hGet hdl 4096
+                                                 when ((BS.length buf) > 0) $ do
+                                                   sendSPI dev (BS.unpack buf)
+                                                   when ver $ putStrLn ("sending " ++ show (BS.length buf) ++ " bytes.")
+                                                   putChar '.'
                                                    loop
-
 
   -- add 48 dummy bits
   sendByte dev 0x8F
