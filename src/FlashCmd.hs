@@ -24,6 +24,7 @@ import           Control.Concurrent (threadDelay)
 import           Control.Monad (when)
 import           Data.Bits
 import qualified Data.ByteString as BS
+import           Data.Word
 
 import Cmd
 
@@ -36,9 +37,8 @@ flashRead :: DeviceHandle
           -> IO () -- BS.ByteString
 flashRead dev addr sz ver = do
   when ver $ putStrLn $ "read " ++ show addr ++ " +" ++ show sz
-  let cmd = [0x03, (shiftR addr 16), (shiftR addr 8), (fromIntegral addr)]
   setGPIO dev (False, False)
-  sendSPI dev (fmap fromIntegral cmd)
+  sendSPI dev (buildCMD 0x03 addr)
 --  d <- xferSPI dev sz
   setGPIO dev (True, False)
 --  return d
@@ -79,9 +79,8 @@ flashBulkErase dev = do
 flashSectorErase :: DeviceHandle -> Int -> IO ()
 flashSectorErase dev addr = do
   putStrLn $ "sector erase " ++ show addr
-  let cmd = [0xD8, (shiftR addr 16), (shiftR addr 8), addr]
   setGPIO dev (False, False)
-  sendSPI dev (fmap fromIntegral cmd)
+  sendSPI dev (buildCMD 0xD8 addr)
   setGPIO dev (True, False)
 
 -- | ..
@@ -101,8 +100,11 @@ flashProgram :: DeviceHandle
              -> IO ()
 flashProgram dev v addr d = do
   when v $ putStrLn $ "program " ++ show addr
-  let cmd = [0x02, (shiftR addr 16), (shiftR addr 8), addr]
   setGPIO dev (False, False)
-  sendSPI dev (fmap fromIntegral cmd)
+  sendSPI dev (buildCMD 0x02 addr)
   sendSPI dev (BS.unpack d)
   setGPIO dev (True, False)
+
+
+buildCMD :: Int -> Int -> [Word8]
+buildCMD cmd addr = fmap fromIntegral [cmd, (shiftR addr 16), (shiftR addr 8), addr]
