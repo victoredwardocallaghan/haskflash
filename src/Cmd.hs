@@ -9,7 +9,12 @@
   This module contains ..
 -}
 
-module Cmd where
+module Cmd ( setGPIO
+           , recvByte
+           , sendByte
+           , sendSPI
+           , xferSPI
+	   ) where
 
 import LibFtdi
 

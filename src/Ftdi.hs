@@ -9,7 +9,9 @@
   This module contains ..
 -}
 
-module Ftdi where
+module Ftdi ( initFTDI
+            , cleanupFTDI
+	    ) where
 
 import LibFtdi
 

@@ -9,13 +9,21 @@
   This module contains ..
 -}
 
-module FlashCmd where
+module FlashCmd ( flashRead
+                , flashWait
+                , flashWriteEnable
+                , flashBulkErase
+                , flashSectorErase
+                , flashReadID
+                , flashProgram
+		) where
 
 import LibFtdi
 
-import Control.Concurrent (threadDelay)
-import Control.Monad (when)
-import Data.Bits
+import           Control.Concurrent (threadDelay)
+import           Control.Monad (when)
+import           Data.Bits
+import qualified Data.ByteString as BS
 
 import Cmd
 
@@ -84,3 +92,12 @@ flashReadID dev = do
   xferSPI dev d
   setGPIO dev (True, False)
   putStrLn $ "flash ID: " ++ show d
+
+-- | ..
+flashProgram :: DeviceHandle
+             -> Bool          -- ^ Verbosity
+             -> Int           -- ^ N
+             -> Int           -- ^ Address
+	     -> BS.ByteString -- ^ Data
+             -> IO ()
+flashProgram dev v n addr d = undefined
