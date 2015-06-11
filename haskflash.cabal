@@ -1,0 +1,51 @@
+name:                haskflash
+
+-- The package version.  See the Haskell package versioning policy (PVP) 
+-- for standards guiding when and how versions should be incremented.
+-- http://www.haskell.org/haskellwiki/Package_versioning_policy
+-- PVP summary:      +-+------- breaking API changes
+--                   | | +----- non-breaking API additions
+--                   | | | +--- code changes with no API change
+version:             0.1.0.0
+synopsis:            SPI flashing tool
+description:         SPI flashing tool written in Haskell for FTDI chips
+homepage:            https://victoredwardocallaghan.github.io/haskflash
+bug-reports:         https://victoredwardocallaghan.github.io/haskflash/issues
+license:             GPL-2
+license-file:        LICENSE
+author:              Edward O'Callaghan
+maintainer:          eocallaghan@alterapraxis.com
+copyright:           (c) Edward O'Callaghan, 2015
+-- category:            
+
+build-type:          Simple
+extra-source-files:  ChangeLog
+
+cabal-version:       >=1.10
+
+
+executable haskflash
+  main-is:             Main.hs
+  
+  -- Modules included in this executable, other than Main.
+  -- other-modules:       
+  
+  -- LANGUAGE extensions used by modules in this package.
+  -- other-extensions:    
+  
+  build-depends:       base >=4.7 && <4.8,
+                       bindings-libftdi >=0.1 && <0.2,
+		       bytestring >=0.10 && <0.11,
+		       optparse-applicative >=0.11 && <0.12
+  
+  hs-source-dirs:      src
+  default-language:    Haskell2010
+  
+--------------------------------------------
+-- Source repository
+--
+source-repository head
+  type:                git
+  location:            git://github.com/victoredwardocallaghan/haskflash
+  branch:              master
+  tag:                 v0.1.0.0
