@@ -96,8 +96,13 @@ flashReadID dev = do
 -- | ..
 flashProgram :: DeviceHandle
              -> Bool          -- ^ Verbosity
-             -> Int           -- ^ N
              -> Int           -- ^ Address
 	     -> BS.ByteString -- ^ Data
              -> IO ()
-flashProgram dev v n addr d = undefined
+flashProgram dev v addr d = do
+  when v $ putStrLn $ "program " ++ show addr
+  let cmd = [0x02, (shiftR addr 16), (shiftR addr 8), addr]
+  setGPIO dev (False, False)
+  sendSPI dev (fmap fromIntegral cmd)
+  sendSPI dev (BS.unpack d)
+  setGPIO dev (True, False)
