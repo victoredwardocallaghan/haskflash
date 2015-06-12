@@ -19,6 +19,7 @@ import Control.Concurrent (threadDelay)
 import Control.Exception (throwIO)
 
 import Cmd
+import Misc
 
 initFTDI' :: IO DeviceHandle
 initFTDI' = do
@@ -37,17 +38,22 @@ initFTDI str = do
   case str of
     Nothing   -> do ftdiUSBOpen ftdic (0x0403, 0x6010)
                     -- "Can't find iCE FTDI USB device (vedor_id 0x0403, device_id 0x6010)."
+                    -- checkAndcleanup $ Just ftdic
     Just dstr -> do ftdiUSBOpenString ftdic dstr
                     -- "Can't find iCE FTDI USB device (device string " ++ dstr ++ ")."
+                    -- checkAndcleanup $ Just ftdic
 
   ftdiUSBReset ftdic
   -- "Failed to reset iCE FTDI USB device."
+  -- checkAndcleanup $ Just ftdic
 
   usbPurgeBuffers ftdic
   -- "Failed to purge buffers on iCE FTDI USB device."
+  -- checkAndcleanup $ Just ftdic
 
   ftdiSetBitMode ftdic 0xFF BITMODE_MPSSE
   -- "Failed set BITMODE_MPSSE on iCE FTDI USB device."
+  -- checkAndcleanup $ Just ftdic
 
   -- enable clock divide by 5
   sendByte ftdic 0x8B

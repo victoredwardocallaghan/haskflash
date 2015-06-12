@@ -26,6 +26,8 @@ import           Data.Bits
 import qualified Data.ByteString as BS
 import           Data.Maybe (listToMaybe)
 
+import Misc
+
 -- ?
 setGPIO :: DeviceHandle -> (Bool, Bool) -> IO ()
 setGPIO dev (slaveset, creset) = do
@@ -56,7 +58,8 @@ recvByte dev = fix $ \loop -> do
 sendByte :: DeviceHandle -> Word8 -> IO ()
 sendByte dev w = do
   r <- ftdiWriteData dev (BS.pack [w])
-  when (r /= 0) $ putStrLn $ "Write error (single byte, rc=" ++ show r ++ ", expected 1)"
+  when (r /= 0) $ do putStrLn $ "Write error (single byte, rc=" ++ show r ++ ", expected 1)"
+                     checkAndcleanup $ Just dev
   return () -- XXX
 
 -- ?
@@ -67,7 +70,8 @@ sendSPI dev d = do
   sendByte dev $ fromIntegral (sz - 1)
   sendByte dev $ fromIntegral (shiftR (sz - 1) 8)
   rc <- ftdiWriteData dev (BS.pack d)
-  when (rc /= sz) $ putStrLn $ "Write error (chunk, rc=" ++ show rc ++ ", expected " ++ show sz ++ ")."
+  when (rc /= sz) $ do putStrLn $ "Write error (chunk, rc=" ++ show rc ++ ", expected " ++ show sz ++ ")."
+                       checkAndcleanup $ Just dev
 
 -- ?
 xferSPI :: DeviceHandle -> [Word8] -> IO BS.ByteString
@@ -79,6 +83,7 @@ xferSPI dev w = do
   sendByte dev (fromIntegral (sz - 1))
   sendByte dev (fromIntegral (shiftL (sz - 1) 8))
   r <- ftdiWriteData dev d
-  when (r /= sz) $ putStrLn $ "Write error (chunk, rc=" ++ show r ++ ", expected " ++ show sz ++ ")."
+  when (r /= sz) $ do putStrLn $ "Write error (chunk, rc=" ++ show r ++ ", expected " ++ show sz ++ ")."
+                      checkAndcleanup $ Just dev
   ba <- replicateM sz $ recvByte dev
   return $ BS.pack ba

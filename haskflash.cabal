@@ -28,7 +28,8 @@ executable haskflash
   main-is:             Main.hs
   other-modules:       Cmd,
                        FlashCmd,
-                       Ftdi
+                       Ftdi,
+                       Misc
   
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:    
