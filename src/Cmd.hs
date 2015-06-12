@@ -18,10 +18,13 @@ module Cmd ( setGPIO
 
 import LibFtdi
 
+import           Control.Concurrent (threadDelay)
 import           Control.Monad (when, replicateM)
+import           Control.Monad.Fix (fix)
 import           Data.Word
 import           Data.Bits
 import qualified Data.ByteString as BS
+import           Data.Maybe (listToMaybe)
 
 
 -- ?
@@ -40,12 +43,15 @@ setGPIO dev (slaveset, creset) = do
 
 -- ?
 recvByte :: DeviceHandle -> IO Word8
-recvByte = undefined
---recvByte dev = fix $ \loop -> do
---  (rc, d) <- ftdiReadData dev 1
---  when (rc /= 1) $ do
---      threadDelay 100
---      loop
+recvByte dev = fix $ \loop -> do
+  d <- ftdiReadData dev 1
+  case d of
+    Nothing -> do threadDelay 100
+                  loop
+    Just x  -> do let y = listToMaybe $ BS.unpack x
+                  case y of
+                   Nothing -> undefined -- XXX should be unreachable
+                   Just z  -> return z
 
 -- ?
 sendByte :: DeviceHandle -> Word8 -> IO ()
@@ -77,4 +83,3 @@ xferSPI dev w = do
   when (r /= sz) $ putStrLn $ "Write error (chunk, rc=" ++ show r ++ ", expected " ++ show sz ++ ")."
   ba <- replicateM sz $ recvByte dev
   return $ BS.pack ba
-
