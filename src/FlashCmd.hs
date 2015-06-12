@@ -28,7 +28,6 @@ import           Data.Word
 
 import Cmd
 
-
 -- | ..
 flashRead :: DeviceHandle
           -> Int -- ^ address
@@ -105,6 +104,6 @@ flashProgram dev v addr d = do
   sendSPI dev (BS.unpack d)
   setGPIO dev (True, False)
 
-
 buildCMD :: Int -> Int -> [Word8]
-buildCMD cmd addr = fmap fromIntegral [cmd, (shiftR addr 16), (shiftR addr 8), addr]
+buildCMD cmd addr = fmap fromIntegral ca
+  where ca = [cmd, (shiftR addr 16), (shiftR addr 8), addr]

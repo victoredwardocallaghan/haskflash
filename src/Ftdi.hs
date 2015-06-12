@@ -65,7 +65,6 @@ initFTDI = do
 
   return ftdic
 
-  
 -- | Exit
 cleanupFTDI :: DeviceHandle -> IO ()
 cleanupFTDI ftdic = do

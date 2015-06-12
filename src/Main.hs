@@ -26,7 +26,6 @@ import Cmd
 import Ftdi
 import FlashCmd
 
-
 -- | ..
 data ProgramOptions  = ProgramOptions { device  :: String -- Maybe
                                       , entire  :: Bool

@@ -26,7 +26,6 @@ import           Data.Bits
 import qualified Data.ByteString as BS
 import           Data.Maybe (listToMaybe)
 
-
 -- ?
 setGPIO :: DeviceHandle -> (Bool, Bool) -> IO ()
 setGPIO dev (slaveset, creset) = do
