@@ -9,10 +9,11 @@
   This module contains ..
 -}
 
-module Cmd ( setGPIO
+module Cmd ( getCDone
            , recvByte
            , sendByte
            , sendSPI
+           , setGPIO
            , xferSPI
 	   ) where
 
@@ -27,6 +28,18 @@ import qualified Data.ByteString as BS
 import           Data.Maybe (listToMaybe)
 
 import Misc
+
+
+-- | ..
+getCDone :: DeviceHandle -> IO String
+getCDone dev = do
+  sendByte dev 0x81
+  d <- recvByte dev
+  -- ADBUS6 (GPIOL2)
+  let res = ((d .&. 0x40) /= 0)
+  case res of
+    False -> return "low"
+    True  -> return "high"
 
 -- ?
 setGPIO :: DeviceHandle -> (Bool, Bool) -> IO ()

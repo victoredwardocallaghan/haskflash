@@ -119,7 +119,8 @@ entry (ProgramOptions h em rm vm be er False ver fp) = do
   putStrLn "reset.."
   setGPIO dev (True, False)
   threadDelay 250000
-  -- printf("cdone: %s\n", get_cdone() ? "high" : "low");
+  cd <- getCDone dev
+  putStrLn $ "cdone: " ++ cd
   flashReadID dev
 
   --
@@ -142,6 +143,8 @@ entry (ProgramOptions h em rm vm be er False ver fp) = do
   -- Reset
   setGPIO dev (True, True)
   threadDelay 250000
+  cd <- getCDone dev
+  putStrLn $ "cdone: " ++ cd
 
   cleanupFTDI dev
   -- .

@@ -63,7 +63,8 @@ initFTDI str = do
   sendByte ftdic 0x00
   sendByte ftdic 0x00
 
-  -- putStrLn $ "cdone: %s\n", get_cdone() ? "high" : "low"
+  cd <- getCDone ftdic
+  putStrLn $ "cdone: " ++ cd
 
   setGPIO ftdic (True, True)
   threadDelay 100000
