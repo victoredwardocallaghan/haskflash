@@ -27,7 +27,7 @@ import Ftdi
 import FlashCmd
 
 -- | ..
-data ProgramOptions  = ProgramOptions { device  :: String -- Maybe
+data ProgramOptions  = ProgramOptions { device  :: Maybe String
                                       , entire  :: Bool
                                       , first   :: Bool
                                       , verify  :: Bool
@@ -41,7 +41,7 @@ data ProgramOptions  = ProgramOptions { device  :: String -- Maybe
 -- | ..
 parseOpts :: Parser ProgramOptions
 parseOpts = ProgramOptions
-  <$> strOption
+  <$> (optional . strOption)
       ( long "device"
       <> short 'd'
       <> metavar "\"i:vid:pid\""
@@ -80,7 +80,7 @@ parseOpts = ProgramOptions
 -- | ..
 entry :: ProgramOptions -> IO ()
 entry (ProgramOptions h False False False False False True ver fp) = do
-  dev <- initFTDI
+  dev <- initFTDI h
   --
   -- Reset
   putStrLn "reset.."
@@ -113,7 +113,7 @@ entry (ProgramOptions h False False False False False True ver fp) = do
   -- .
 
 entry (ProgramOptions h em rm vm be er False ver fp) = do
-  dev <- initFTDI
+  dev <- initFTDI h
   --
   -- Reset
   putStrLn "reset.."

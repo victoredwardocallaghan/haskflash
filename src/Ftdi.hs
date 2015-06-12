@@ -29,17 +29,16 @@ initFTDI' = do
     Right ftdic -> return ftdic
 
 -- | Initialize USB connection to FT2232H
-initFTDI :: IO DeviceHandle
-initFTDI = do
+initFTDI :: Maybe String -> IO DeviceHandle
+initFTDI str = do
   ftdic <- initFTDI'
   ftdiSetInterface ftdic INTERFACE_ANY
 
---	if (devstr != NULL) {
---		if (ftdi_usb_open_string(&ftdic, devstr)) {
---			printf("Can't find iCE FTDI USB device (device string %s).\n", devstr);
-
-  ftdiUSBOpen ftdic (0x0403, 0x6010)
-  -- "Can't find iCE FTDI USB device (vedor_id 0x0403, device_id 0x6010)."
+  case str of
+    Nothing   -> do ftdiUSBOpen ftdic (0x0403, 0x6010)
+                    -- "Can't find iCE FTDI USB device (vedor_id 0x0403, device_id 0x6010)."
+    Just dstr -> do ftdiUSBOpenString ftdic dstr
+                    -- "Can't find iCE FTDI USB device (device string " ++ dstr ++ ")."
 
   ftdiUSBReset ftdic
   -- "Failed to reset iCE FTDI USB device."
