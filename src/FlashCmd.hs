@@ -27,6 +27,7 @@ import qualified Data.ByteString as BS
 import           Data.Word
 
 import Cmd
+import Misc
 
 -- | ..
 flashRead :: DeviceHandle
@@ -40,6 +41,7 @@ flashRead dev addr sz ver = do
   sendSPI dev (buildCMD 0x03 addr)
   d <- xferSPI dev (replicate sz 0)
   setGPIO dev (True, False)
+  when ver $ putStrLn (bsToHexString d)
   return d
 
 -- | ..
@@ -85,11 +87,10 @@ flashSectorErase dev addr = do
 -- | ..
 flashReadID :: DeviceHandle -> IO ()
 flashReadID dev = do
-  let d = [0x9E]
   setGPIO dev (False, False)
-  xferSPI dev d
+  d <- xferSPI dev (replicate 21 0x9E)
   setGPIO dev (True, False)
-  putStrLn $ "flash ID: " ++ show d
+  putStrLn $ "flash ID: " ++ bsToHexString d
 
 -- | ..
 flashProgram :: DeviceHandle
