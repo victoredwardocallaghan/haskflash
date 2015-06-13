@@ -33,14 +33,14 @@ flashRead :: DeviceHandle
           -> Int -- ^ address
           -> Int -- ^ size
           -> Bool -- ^ verbose
-          -> IO () -- BS.ByteString
+          -> IO BS.ByteString
 flashRead dev addr sz ver = do
   when ver $ putStrLn $ "read " ++ show addr ++ " +" ++ show sz
   setGPIO dev (False, False)
   sendSPI dev (buildCMD 0x03 addr)
---  d <- xferSPI dev sz
+  d <- xferSPI dev (replicate sz 0)
   setGPIO dev (True, False)
---  return d
+  return d
 
 -- | ..
 flashWait :: DeviceHandle -> Bool -> IO ()

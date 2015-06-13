@@ -136,8 +136,8 @@ entry (ProgramOptions h em rm vm be er False ver fp) = do
 
   --
   -- Read/Verify
-  if (em .|. rm) then putStrLn "reading.."
-  else putStrLn "reading..X"
+  if (em .|. rm) then readFlashToFile dev fp (4 * 1024 * 1024) ver
+  else verifyFlashInFile dev fp ver
 
   --
   -- Reset
@@ -150,6 +150,32 @@ entry (ProgramOptions h em rm vm be er False ver fp) = do
   -- .
 
 entry _ = return ()
+
+-- ..
+readFlashToFile :: DeviceHandle -> FilePath -> Int -> Bool -> IO ()
+readFlashToFile dev fp sz ver = withBinaryFile fp WriteMode $ \hdl -> do
+  putStrLn "reading.."
+  loop hdl dev 0 ver
+  where loop h a b c = when (b < sz) $ do
+          buf <- flashRead a b 256 c
+          BS.hPut h buf
+          loop h a (b+256) c
+
+-- ..
+verifyFlashInFile :: DeviceHandle -> FilePath -> Bool -> IO ()
+verifyFlashInFile dev fp ver = withBinaryFile fp ReadMode  $ \hdl -> do
+  putStrLn "reading.. (FIXME)"
+  loop hdl dev 0 ver
+  where loop h d a v = do
+          eof <- hIsEOF h
+          when (not eof) $ do
+            fbuf <- BS.hGet h 256
+            print fbuf
+            sbuf <- flashRead dev a 256 ver
+            if fbuf /= sbuf then
+              putStrLn "Found difference between flash and file!"
+            else putStrLn "VERIFY OK"
+            loop h d (a+256) v
 
 -- | ..
 main :: IO ()
