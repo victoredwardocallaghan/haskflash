@@ -12,9 +12,13 @@
 -}
 
 module Misc ( checkAndcleanup
+            , bsToHexString
             ) where
 
-import System.Exit (exitFailure)
+import qualified Data.ByteString as BS
+import           Data.List.Split (chunksOf)
+import           System.Exit (exitFailure)
+import           Text.Printf (printf)
 
 import LibFtdi
 
@@ -38,3 +42,8 @@ checkRx  = loop
             Nothing -> do putStrLn $ "unexpected rx byte: " ++ show d
                           loop dev
             Just _  -> return ()
+
+-- | Given a ByteString return a String of bytes in the hex representation
+bsToHexString :: BS.ByteString -> String
+bsToHexString x = unlines $ fmap (concatMap (printf "0x%.2X ")) ls
+  where ls = chunksOf 32 (BS.unpack x)
