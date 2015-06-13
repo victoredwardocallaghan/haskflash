@@ -156,10 +156,10 @@ readFlashToFile :: DeviceHandle -> FilePath -> Int -> Bool -> IO ()
 readFlashToFile dev fp sz ver = withBinaryFile fp WriteMode $ \hdl -> do
   putStrLn "reading.."
   loop hdl dev 0 ver
-  where loop h a b c = when (b < sz) $ do
-          buf <- flashRead a b 256 c
+  where loop h d a v = when (a < sz) $ do
+          buf <- flashRead d a 256 v
           BS.hPut h buf
-          loop h a (b+256) c
+          loop h d (a+256) v
 
 -- ..
 verifyFlashInFile :: DeviceHandle -> FilePath -> Bool -> IO ()
@@ -170,7 +170,6 @@ verifyFlashInFile dev fp ver = withBinaryFile fp ReadMode  $ \hdl -> do
           eof <- hIsEOF h
           when (not eof) $ do
             fbuf <- BS.hGet h 256
-            print fbuf
             sbuf <- flashRead dev a 256 ver
             if fbuf /= sbuf then
               putStrLn "Found difference between flash and file!"
