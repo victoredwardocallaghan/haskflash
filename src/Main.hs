@@ -153,7 +153,7 @@ entry _ = return ()
 
 -- ..
 readFlashToFile :: DeviceHandle -> FilePath -> Int -> Bool -> IO ()
-readFlashToFile dev fp sz ver = withBinaryFile fp WriteMode $ \hdl -> do
+readFlashToFile dev fp sz ver = withBinaryFile fp AppendMode $ \hdl -> do
   putStrLn "reading.."
   loop hdl dev 0 ver
   where loop h d a v = when (a < sz) $ do
