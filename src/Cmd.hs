@@ -71,7 +71,7 @@ recvByte dev = fix $ \loop -> do
 sendByte :: DeviceHandle -> Word8 -> IO ()
 sendByte dev w = do
   r <- ftdiWriteData dev (BS.pack [w])
-  when (r /= 0) $ do putStrLn $ "Write error (single byte, rc=" ++ show r ++ ", expected 1)"
+  when (r /= 1) $ do putStrLn $ "Write error (single byte, rc=" ++ show r ++ ", expected 1)"
                      checkAndcleanup $ Just dev
   return () -- XXX
 
